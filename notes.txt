@@ -1,0 +1,9 @@
+ROUTES
+    Angular routes allow us to map URLs to use templates so that every time the current route changes, the included view changes with it.
+        use ngView
+            tell Angular where to load in templates 
+        load the ngRoute lib
+            load the file script in the html
+        import ngRoute module
+            import in the angular module
+        define route
