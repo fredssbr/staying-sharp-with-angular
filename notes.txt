@@ -1,9 +1,86 @@
 ROUTES
     Angular routes allow us to map URLs to use templates so that every time the current route changes, the included view changes with it.
         use ngView
-            tell Angular where to load in templates 
+            tells Angular where to load in templates 
         load the ngRoute lib
             load the file script in the html
         import ngRoute module
             import in the angular module
         define route
+
+DIRECTIVES WITH $SCOPE
+
+    Directives inherit their parents' $scope by default, If it adds a new property, it gets stored on the parent's $scope.
+    If you isolate the $scope, scope: {} on the directive object declaration, that new property gets stored on the child's $scope.
+    The child no longer has access to anything from the parent.
+    
+    For example:
+    
+    Let's say we have this piece of code:
+        
+        <div ng-repeat="note in note.notesList">
+            <nw-card></nw-card>
+        </div>
+        
+        in the the template for the nwCard directive, we still have access to note, because by default, the child has access to its parent's scope.
+        
+        nw-card.html
+            <h2>{{note.header}}</h2>
+        
+        However, if in the configuration of the directive you want to isolate the scope, you no longer has acess to note. 
+        What you can do is this:
+        
+            app.module("NoteWrangler")
+                .directive("nwCard", function(){
+                    return {
+                        restrict: 'E',
+                        templateUrl: 'templates/directives/nw-card.html',
+                        scope:{
+                            header: '='
+                        }
+                    };
+                });
+        
+        In the code above, you passed in a string to the nwCard directive's scope.
+        There are 3 options when binding data to an isolate scope:
+            @
+            = Two way bindings. If the object gets changed, it gets changed everywhere.
+            &
+        
+        Now you could have:
+            index.html
+                <div ng-repeat="note in note.notesList">
+                    <nw-card header="note.header"></nw-card>
+                </div>
+            
+            nw-card.html
+                <h2>{{header}}</h2>
+
+    DIFFERENCE BETWEEN $SCOPE AND SCOPE OBJECT
+
+        SCOPE OBJECT: used for isolating a directive's scope.
+        $SCOPE: allows you to set values as properties to the scope object.
+    
+    LINK:
+        the link function is run after our directive has been compiled and linked up.
+        this is the best spot to do some DOM manipulation.
+        
+        link: function(scope, element, attrs){
+            element.on("click", function(){
+                element("div.card p).toggleClass("hidden");
+            });        
+        }
+        the element refers to the outermost element inside the template.
+        In the example above, the jQuery would look for the selector in the entire DOM. Using the outermost element restricts the scope of the search.
+        It makes our application faster and resource-friendly.
+        The attrs element refers to the attributes in the directive, in this case, header, which can be accessed by attrs.header inside the link function.
+        
+        Tip: use the markdown library to display the DOM properly. However, angular does not know if it is really HTML. 
+        
+        ngBindHtml: the {{}} in the template won't insert HTML directly for safety reasons.
+            
+            <h2><span ng-bind-html="header"></span></h2>
+        
+        $sce (Strict Contextual Escaping service): will tell angular to trust the code as HTML.
+            
+            $sce.trustAsHtml(code)
