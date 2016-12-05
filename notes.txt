@@ -84,3 +84,15 @@ DIRECTIVES WITH $SCOPE
         $sce (Strict Contextual Escaping service): will tell angular to trust the code as HTML.
             
             $sce.trustAsHtml(code)
+
+SERVICES:
+    Services should hold functions responsible for connecting and fetching data, and then sharing it across our application.
+    
+    Services recipes:
+        VALUE: the simples service recipe used for sharing a value that is used throughout your app repeatedly.
+        > FACTORY: used for sharing functions and objects across the application (most used)
+        > PROVIDER: same thing as factory, but allows for configuration.
+        SERVICE: shares instances of methods and objects (instead of the object itself)
+        CONSTANT: shares a value withing application configuration.
+    
+    
